@@ -3,13 +3,13 @@
 #include <map>
 #include <vector>
 
-#include "database.h"
 #include "itemsets.h"
 #include "prefixtree.h"
+#include "transactiondatabase.h"
 
 using std::vector;
 
-FrequentItemsets apriori(const Database& d, int minsup) {
+FrequentItemsets apriori(const TransactionDatabase& d, unsigned int minsup) {
     FrequentItemsets result;
 
     // initial prefix tree with single-item itemsets
@@ -31,7 +31,7 @@ FrequentItemsets apriori(const Database& d, int minsup) {
         // check support and add nodes to results or purge them
         bool keep = tree.eachNode(k, [&result, minsup](vector<int> itemset,
                                                        Node& node) {
-            int s = node.support();
+            unsigned int s = node.support();
             if (s < minsup)
                 return false;
             result[itemset] = s;

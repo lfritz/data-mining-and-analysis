@@ -14,7 +14,7 @@ using std::runtime_error;
 using std::string;
 using std::vector;
 
-Database load_msweb_file(const string& filename) {
+TransactionDatabase load_msweb_file(const string& filename) {
     std::ifstream input(filename);
     if ( ! input) {
         std::ostringstream o;
@@ -91,5 +91,5 @@ Database load_msweb_file(const string& filename) {
         }
     }
 
-    return Database(is, ts);
+    return TransactionDatabase(is, ts);
 }

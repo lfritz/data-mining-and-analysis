@@ -2,14 +2,15 @@
 
 #include <functional>
 
-#include "database.h"
 #include "itemsets.h"
+#include "transactiondatabase.h"
 
 using std::vector;
 
 // Compute the support for an itemset.
-int support(const Database& d, const vector<int>& itemset) {
-    int count = 0;
+unsigned int support(const TransactionDatabase& d,
+                     const vector<int>& itemset) {
+    unsigned int count = 0;
     for (const vector<int>& transaction : d.ts)
         count += is_subset(itemset, transaction);
     return count;
@@ -34,11 +35,12 @@ void each_candidate(std::function<void(const vector<int>&)> f, int nItems) {
     each_candidate(f, candidate, nItems, 0);
 }
 
-FrequentItemsets brute_force(const Database& d, int minsup) {
+FrequentItemsets brute_force(const TransactionDatabase& d,
+                             unsigned int minsup) {
     FrequentItemsets result;
 
     each_candidate([&d, minsup, &result](const vector<int>& candidate) {
-        int s = support(d, candidate);
+        unsigned int s = support(d, candidate);
         if (s >= minsup)
             result[candidate] = s;
     }, d.nItems());

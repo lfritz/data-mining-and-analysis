@@ -6,7 +6,7 @@ if (Boost_FOUND)
 endif()
 
 # static library used for unit tests
-set(LIBRARYFILES apriori.cpp bruteforce.cpp database.cpp itemsets.cpp main.cpp msweb.cpp prefixtree.cpp)
+set(LIBRARYFILES apriori.cpp bruteforce.cpp eclat.cpp itemsets.cpp main.cpp msweb.cpp prefixtree.cpp transactiondatabase.cpp verticaldatabase.cpp)
 add_library(itemsetmining ${LIBRARYFILES})
 
 # command-line executable

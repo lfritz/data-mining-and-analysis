@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "database.h"
+#include "transactiondatabase.h"
 
 using std::function;
 using std::vector;
@@ -82,14 +82,14 @@ bool Node::eachNode(int level, NodeCallback f, vector<int>& prefix) {
 }
 
 void Node::printTree(std::ostream& out,
-                     const Database& database,
+                     const TransactionDatabase& database,
                      const std::string& sep) const {
     vector<int> prefix;
     printTree(out, database, prefix, sep);
 }
 
 void Node::printTree(std::ostream& out,
-                     const Database& database,
+                     const TransactionDatabase& database,
                      std::vector<int> prefix,
                      const std::string& sep) const {
     database.printItemset(out, prefix, sep);

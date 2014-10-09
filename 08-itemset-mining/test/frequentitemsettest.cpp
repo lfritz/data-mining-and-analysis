@@ -4,7 +4,7 @@ using std::string;
 using std::unique_ptr;
 using std::vector;
 
-FrequentItemsetTest::FrequentItemsetTest() : database() {
+FrequentItemsetTest::FrequentItemsetTest() : td() {
     // sample database from the book
     vector<string> items = { "A", "B", "C", "D", "E" };
     vector<vector<int>> transactions = {
@@ -15,7 +15,9 @@ FrequentItemsetTest::FrequentItemsetTest() : database() {
         { 0, 1, 2, 3, 4 },
         {    1, 2, 3,   }
     };
-    database = unique_ptr<Database>(new Database(items, transactions));
+    td = unique_ptr<TransactionDatabase>(new TransactionDatabase(items,
+                                                                 transactions));
+    vd = unique_ptr<VerticalDatabase>(new VerticalDatabase(*td));
 
     // frequent itemsets (table 8.1 in the book)
     minsup = 3;
@@ -37,11 +39,16 @@ FrequentItemsetTest::FrequentItemsetTest() : database() {
 }
 
 TEST_F(FrequentItemsetTest, brute_force) {
-    FrequentItemsets results = brute_force(*database, minsup);
+    FrequentItemsets results = brute_force(*td, minsup);
     EXPECT_EQ(correct_result, results);
 }
 
 TEST_F(FrequentItemsetTest, apriori) {
-    FrequentItemsets results = apriori(*database, minsup);
+    FrequentItemsets results = apriori(*td, minsup);
+    EXPECT_EQ(correct_result, results);
+}
+
+TEST_F(FrequentItemsetTest, eclat) {
+    FrequentItemsets results = eclat(*vd, minsup);
     EXPECT_EQ(correct_result, results);
 }

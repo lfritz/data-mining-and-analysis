@@ -5,7 +5,7 @@ include_directories(
     ${ITEMSETMINING_SOURCE_DIR}/src
 )
 
-set(SOURCEFILES main.cpp frequentitemsettest.cpp itemsetstest.cpp prefixtreetest.cpp)
+set(SOURCEFILES main.cpp frequentitemsettest.cpp itemsetstest.cpp prefixtreetest.cpp verticaldatabasetest.cpp)
 
 add_executable(unittest ${SOURCEFILES})
 target_link_libraries(unittest itemsetmining gtest_main)

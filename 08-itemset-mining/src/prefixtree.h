@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-class Database;
+class TransactionDatabase;
 
 class Node;
 
@@ -18,14 +18,14 @@ typedef std::function<bool(std::vector<int> prefix, Node& node)>
 // A node in a prefix tree. The prefix tree is represented by the root node.
 class Node {
     std::map<int, std::unique_ptr<Node>> c; // child nodes
-    int s;                                  // support
+    unsigned int s;                         // support
 
 public:
     // Create a node without children and support 0.
     Node() : c(), s(0) { }
 
     // The node's support.
-    int& support() { return s; }
+    unsigned int& support() { return s; }
 
     // Is the node a leaf node (one with no children)?
     bool isLeaf() const { return c.empty(); }
@@ -55,7 +55,7 @@ public:
 
     // Print the entire tree to 'out'.
     void printTree(std::ostream& out,
-                   const Database& database,
+                   const TransactionDatabase& database,
                    const std::string& sep="") const;
 
 private:
@@ -64,7 +64,7 @@ private:
 
     // Helper function for 'printTree'.
     void printTree(std::ostream& out,
-                   const Database& database,
+                   const TransactionDatabase& database,
                    std::vector<int> prefix,
                    const std::string& sep) const;
 };

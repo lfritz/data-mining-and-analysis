@@ -1,4 +1,4 @@
-#include "database.h"
+#include "transactiondatabase.h"
 
 #include <algorithm>
 #include <cassert>
@@ -7,8 +7,8 @@ using std::string;
 using std::vector;
 
 // Initialize database using a list of item ids for each transaction.
-Database::Database(vector<string> items,
-                   vector<vector<int>> transactions) :
+TransactionDatabase::TransactionDatabase(vector<string> items,
+                                         vector<vector<int>> transactions) :
     ts(transactions),
     is(items) {
     int nItems = is.size();
@@ -21,9 +21,9 @@ Database::Database(vector<string> items,
     }
 }
 
-void Database::printItemset(std::ostream& out,
-                            const vector<int>& itemset,
-                            const string& sep) const {
+void TransactionDatabase::printItemset(std::ostream& out,
+                                       const vector<int>& itemset,
+                                       const string& sep) const {
     bool first = true;
     for (int i : itemset) {
         if (first)

@@ -7,11 +7,12 @@
 #include <map>
 #include <vector>
 
-struct Database;
+struct TransactionDatabase;
 
 // Frequent itemsets from a database. Maps each frequent itemset to its
 // support.
 typedef std::map<std::vector<int>, int> FrequentItemsets;
 
 // Brute-force algorithm to find frequent items in the database.
-FrequentItemsets brute_force(const Database& d, int minsup);
+FrequentItemsets brute_force(const TransactionDatabase& d,
+                             unsigned int minsup);
