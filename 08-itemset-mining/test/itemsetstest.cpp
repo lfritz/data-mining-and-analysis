@@ -1,11 +1,13 @@
 #include "itemsetstest.h"
 
+#include <boost/dynamic_bitset.hpp>
 #include <set>
 #include <vector>
 
 #include <itemsets.h>
 #include <prefixtree.h>
 
+using boost::dynamic_bitset;
 using std::set;
 using std::vector;
 
@@ -61,4 +63,22 @@ TEST_F(ItemsetsTest, immediate_subsets_in) {
     EXPECT_TRUE(immediate_subsets_in(root, itemset1));
     EXPECT_FALSE(immediate_subsets_in(root, itemset2));
     EXPECT_TRUE(immediate_subsets_in(root, itemset3));
+}
+
+// test itemset_without
+TEST_F(ItemsetsTest, itemset_without) {
+    vector<int> itemset_a = { 0, 1, 3, 5, 9 };
+    vector<int> itemset_b = { 0, 2, 4, 5, 6, 7 };
+    vector<int> correct_result = { 1, 3, 9 };
+    EXPECT_EQ(correct_result, itemset_without(itemset_a, itemset_b));
+}
+
+// test diffset_for_single_item function
+TEST_F(ItemsetsTest, diffset_for_single_item) {
+    dynamic_bitset<> tids(5);
+    tids.set(1);
+    tids.set(3);
+    tids.set(4);
+    vector<int> correct_result = {0,2};
+    EXPECT_EQ(correct_result, diffset_for_single_item(tids));
 }

@@ -3,6 +3,7 @@
 // Helper functions for working with itemsets. The itemset vectors are assumed
 // to be sorted and without duplicates.
 
+#include <boost/dynamic_bitset.hpp>
 #include <functional>
 #include <vector>
 
@@ -19,3 +20,10 @@ void each_k_subset(unsigned int k,
 // Given an itemset of size k, check if all subsets of size k-1 are in the
 // tree.
 bool immediate_subsets_in(const Node& tree, const std::vector<int>& itemset);
+
+// Get an itemset with all items in 'a', except the ones in 'b'.
+std::vector<int> itemset_without(const std::vector<int> itemset_a,
+                                 const std::vector<int> itemset_b);
+
+// Get a diffset for a single-item itemset.
+std::vector<int> diffset_for_single_item(boost::dynamic_bitset<> tids);

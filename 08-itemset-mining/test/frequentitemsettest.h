@@ -5,6 +5,7 @@
 
 #include <apriori.h>
 #include <bruteforce.h>
+#include <declat.h>
 #include <eclat.h>
 #include <transactiondatabase.h>
 #include <verticaldatabase.h>

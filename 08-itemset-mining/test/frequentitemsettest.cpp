@@ -52,3 +52,8 @@ TEST_F(FrequentItemsetTest, eclat) {
     FrequentItemsets results = eclat(*vd, minsup);
     EXPECT_EQ(correct_result, results);
 }
+
+TEST_F(FrequentItemsetTest, declat) {
+    FrequentItemsets results = declat(*vd, minsup);
+    EXPECT_EQ(correct_result, results);
+}

@@ -5,6 +5,7 @@
 
 #include "apriori.h"
 #include "bruteforce.h"
+#include "declat.h"
 #include "eclat.h"
 #include "msweb.h"
 #include "transactiondatabase.h"
@@ -26,7 +27,7 @@ void time(const string& name, std::function<void()> f) {
 int main(int argc, char * argv[]) {
     if (argc != 4) {
         cout << "Usage: " << argv[0] << " algorithm minsup msweb-file\n"
-             << "Algorithm can be 'brute-force', 'apriori' or 'eclat.\n";
+             << "Algorithm can be brute-force, apriori, declat or eclat.\n";
         return 1;
     }
 
@@ -50,11 +51,17 @@ int main(int argc, char * argv[]) {
         time("brute-force algorithm", [&fi,&td,minsup]() {
             fi = brute_force(td, minsup);
         });
-    } else if (algorithm == 'e') {
+    } else {
         VerticalDatabase vd(td);
-        time("eclat algorithm", [&fi,&vd,minsup]() {
-            fi = eclat(vd, minsup);
-        });
+        if (algorithm == 'd') {
+            time("declat algorithm", [&fi,&vd,minsup]() {
+                fi = declat(vd, minsup);
+            });
+        } else {
+            time("eclat algorithm", [&fi,&vd,minsup]() {
+                fi = eclat(vd, minsup);
+            });
+        }
     }
 
     cout << "Found " << fi.size() << " requent itemsets:\n";

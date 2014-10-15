@@ -2,6 +2,7 @@
 
 #include "prefixtree.h"
 
+using boost::dynamic_bitset;
 using std::vector;
 
 bool is_subset(const vector<int>& a, const vector<int>& b) {
@@ -86,4 +87,45 @@ bool immediate_subsets_in(const Node& tree, const vector<int>& itemset) {
             return false;
     }
     return true;
+}
+
+vector<int> itemset_without(const vector<int> itemset_a,
+                            const vector<int> itemset_b) {
+    int size_a = itemset_a.size();
+    int size_b = itemset_b.size();
+    int i = 0; // index into itemset_a
+    int j = 0; // index into itemset_b
+    vector<int> result;
+    while (i < size_a) {
+        if (j >= size_b) {
+            // no more items in itemset_b: include the rest of itemset_a
+            while (i < size_a)
+                result.push_back(itemset_a[i++]);
+            break;
+        }
+        int a = itemset_a[i];
+        int b = itemset_b[j];
+        if (a == b) {
+            // same item in both itemsets: skip it
+            ++i;
+            ++j;
+        } else if (a < b) {
+            // item 'a' is ony in itemset_a: include it
+            result.push_back(a);
+            ++i;
+        } else {
+            // item 'b' is only in itemset_b: ignore it
+            ++j;
+        }
+    }
+    return result;
+}
+
+vector<int> diffset_for_single_item(dynamic_bitset<> tids) {
+    vector<int> diffset;
+    dynamic_bitset<>::size_type size = tids.size();
+    for (dynamic_bitset<>::size_type i = 0; i < size; ++i)
+        if ( ! tids.test(i))
+            diffset.push_back(i);
+    return diffset;
 }

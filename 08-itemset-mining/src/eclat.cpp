@@ -19,7 +19,7 @@ void eclat_recursive(const vector<int>& prefix,
                      FrequentItemsets& result) {
     auto size = p.size();
     for (unsigned int i = 0; i < size; ++i) {
-        // take candidate a from 'p'
+        // take candidate a from p
         const Candidate& candidate_a = p[i];
         int a = candidate_a.first;
         vector<int> itemset_a = prefix;
@@ -30,7 +30,7 @@ void eclat_recursive(const vector<int>& prefix,
         // look for frequent itemsets with candidate a as prefix
         vector<Candidate> pa;
         for (unsigned int j = i+1; j < size; ++j) {
-            // take candidate b from 'p'
+            // take candidate b from p
             const Candidate& candidate_b = p[j];
             int b = candidate_b.first;
             const dynamic_bitset<>& bitset_b = candidate_b.second;
