@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "apriori.h"
+#include "associationrules.h"
 #include "bruteforce.h"
 #include "declat.h"
 #include "eclat.h"
@@ -12,6 +13,7 @@
 #include "verticaldatabase.h"
 
 using std::cout;
+using std::get;
 using std::string;
 
 void time(const string& name, std::function<void()> f) {
@@ -25,23 +27,25 @@ void time(const string& name, std::function<void()> f) {
 }
 
 int main(int argc, char * argv[]) {
-    if (argc != 4) {
-        cout << "Usage: " << argv[0] << " algorithm minsup msweb-file\n"
+    // parse arguments
+    if (argc != 5) {
+        cout << "Usage: " << argv[0] << " algorithm minsup minconf file\n"
              << "Algorithm can be brute-force, apriori, declat or eclat.\n";
         return 1;
     }
-
     char algorithm = argv[1][0];
     unsigned int minsup = std::stoi(argv[2]);
-    std::string filename = argv[3];
+    double minconf = std::stod(argv[3]);
+    std::string filename = argv[4];
 
+    // load input data
     cout << "Loading input data...\n";
     TransactionDatabase td(load_msweb_file(filename));
-
     cout << "Loaded " << td.nItems() << " items and " << td.nTransactions()
          << " transactions.\n";
     cout << "Finding frequent itemsets...\n";
 
+    // find frequent items
     FrequentItemsets fi;
     if (algorithm == 'a') {
         time("apriori algorithm", [&fi,&td,minsup]() {
@@ -64,11 +68,20 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    cout << "Found " << fi.size() << " requent itemsets:\n";
-    for (const auto& kv : fi) {
-        cout << kv.second << " ";
-        td.printItemset(cout, kv.first, " ");
-        cout << "\n";
+    // find association rules
+    std::vector<AssociationRule> rules;
+    time("finding association rules", [&rules,&fi,&minconf]() {
+        rules = association_rules(fi, minconf);
+    });
+
+    // print results
+    cout << "Found " << rules.size() << " association rules:\n";
+    for (const auto& rule : rules) {
+        td.printItemset(cout, get<0>(rule), " ");
+        cout << " -> ";
+        td.printItemset(cout, get<1>(rule), " ");
+        cout << " (support: " << get<2>(rule)
+             << ", confidence: " << get<3>(rule) << ")\n";
     }
 
     return 0;
