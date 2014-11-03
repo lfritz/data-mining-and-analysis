@@ -1,8 +1,8 @@
 # we need to set 'src' as include directory so the compiler can find the header
 # files
 include_directories(
-    ${ITEMSETMINING_SOURCE_DIR}/lib/gtest-1.7.0/include
-    ${ITEMSETMINING_SOURCE_DIR}/src
+    ${DATAMINING_SOURCE_DIR}/lib/gtest-1.7.0/include
+    ${DATAMINING_SOURCE_DIR}/src
 )
 
 set(SOURCEFILES main.cpp associationrulestest.cpp frequentitemsettest.cpp itemsetstest.cpp prefixtreetest.cpp verticaldatabasetest.cpp)

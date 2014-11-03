@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(ITEMSETMINING)
+project(DATAMINING)
 
-add_definitions(-std=c++11 -Wall -Werror)
+add_definitions(-std=c++11 -Wall)
 
 add_subdirectory(src)
 add_subdirectory(test)
