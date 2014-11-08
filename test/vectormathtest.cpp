@@ -30,5 +30,11 @@ TEST_F(VectorMathTest, norm) {
 TEST_F(VectorMathTest, distance) {
     vector<double> x = { 1.2,  3.4 };
     vector<double> y = { 0.3, -1.5 };
-    EXPECT_EQ(4.98196748283246, distance(x, y));
+    EXPECT_DOUBLE_EQ(4.98196748283246, distance(x, y));
+}
+
+TEST_F(VectorMathTest, distance_squared) {
+    vector<double> x = { 1.2,  3.4 };
+    vector<double> y = { 0.3, -1.5 };
+    EXPECT_DOUBLE_EQ(24.82, distance_squared(x, y));
 }

@@ -24,7 +24,7 @@ TEST_F(KmeansTest, clustering_sse) {
         { { 1.0, 2.0 }, { 2.0, 1.0 } },
         { 0, 0, 0, 1, 1, 1 }
     };
-    double correct_sse = (4.0 + 2.0*sqrt(2.0)) * 0.5;
+    double correct_sse = 4*0.25 + 2*0.5;
     EXPECT_EQ(correct_sse, clustering_sse(points, clustering));
 }
 

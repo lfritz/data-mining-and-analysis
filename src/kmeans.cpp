@@ -1,7 +1,6 @@
 #include "kmeans.h"
 
 #include <cassert>
-#include <iostream>
 #include <limits>
 #include <random>
 
@@ -10,15 +9,13 @@
 using std::pair;
 using std::vector;
 
-// TODO we should be using distance_squared instead of distance in some places
-
 double clustering_sse(const vector<Point>& points,
                       const Clustering& clustering) {
     double sse = 0.0;
     unsigned n = points.size();
     for (unsigned i = 0; i < n; ++i)
-        sse += distance(points[i],
-                        clustering.centroids[clustering.cluster[i]]);
+        sse += distance_squared(points[i],
+                                clustering.centroids[clustering.cluster[i]]);
     return sse;
 }
 
@@ -75,7 +72,7 @@ Clustering kmeans(const vector<Point>& points,
             unsigned min_j = 0;
             double min_distance = std::numeric_limits<double>::max();
             for (unsigned j = 0; j < k; ++j) {
-                double d = distance(centroids[j], p);
+                double d = distance_squared(centroids[j], p);
                 if (d < min_distance) {
                     min_j = j;
                     min_distance = d;
@@ -102,7 +99,7 @@ Clustering kmeans(const vector<Point>& points,
         // check stopping criterion
         double d = 0.0;
         for (unsigned j = 0; j < k; ++j)
-            d += distance(previous_centroids[j], centroids[j]);
+            d += distance_squared(previous_centroids[j], centroids[j]);
         if (d <= epsilon)
             break;
     }
