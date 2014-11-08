@@ -12,6 +12,14 @@ inline std::vector<double> add(const std::vector<double>& x,
     return sum;
 }
 
+inline std::vector<double> sum(const std::vector<std::vector<double>>& ps) {
+    std::vector<double> s = ps[0];
+    unsigned n = ps.size();
+    for (unsigned i = 1; i < n; ++i)
+        s = add(s, ps[i]);
+    return s;
+}
+
 inline std::vector<double> subtract(const std::vector<double>& x,
                                     const std::vector<double>& y) {
     unsigned int n = x.size();

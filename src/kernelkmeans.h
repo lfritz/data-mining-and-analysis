@@ -1,6 +1,6 @@
 #pragma once
 
-// Kernel K-means algorithm for clustering, from chapter 13.1 of Data Mining
+// Kernel K-means algorithm for clustering, from chapter 13.2 of Data Mining
 // and Analysis: Fundamental Concepts and Algorithms by Mohammed J. Zaki and
 // Wagner Meira Jr.
 

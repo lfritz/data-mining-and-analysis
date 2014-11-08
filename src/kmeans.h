@@ -7,18 +7,14 @@
 #include <utility>
 #include <vector>
 
+#include "clustering.h"
+
 typedef std::vector<double> Point;
 
-// Result of clustering using centroids: centroid[j] is the center of cluster j
-// and cluster[i] indicates which cluster point i is assigned to.
-// XXX do we need to return the centroids?
-struct Clustering {
-    std::vector<Point> centroids;
-    std::vector<unsigned> cluster;
-};
-
 // Compute the sum of squared errors (SSE) for a clustering.
-double clustering_sse(const std::vector<Point>& points,
+double clustering_sse(unsigned n,
+                      unsigned k,
+                      const std::vector<Point>& points,
                       const Clustering& clustering);
 
 // Determine the range of values in each dimension for a set of vectors.
@@ -30,6 +26,17 @@ double uniform_random_double(double min, double max);
 
 // Randomly generate double vector in the given range.
 Point uniform_random_vector(const std::vector<std::pair<double,double>>& r);
+
+// Compute the centroid of each cluster, ie, the mean of all points in the
+// cluster.
+std::vector<Point> compute_centroids(const std::vector<Point>& points,
+                                     const Clustering& clustering);
+
+// Assign each point to the closest centroid.
+Clustering clustering_for_centroids(unsigned n,
+                                    unsigned k,
+                                    const std::vector<Point>& points,
+                                    const std::vector<Point>& centroids);
 
 // K-means algorithm for clustering: group the points into k clusters. The
 // algorithm proceeds iteratively for at most max_iterations or until the

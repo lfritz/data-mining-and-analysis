@@ -20,12 +20,9 @@ KmeansTest::KmeansTest() {
 }
 
 TEST_F(KmeansTest, clustering_sse) {
-    Clustering clustering {
-        { { 1.0, 2.0 }, { 2.0, 1.0 } },
-        { 0, 0, 0, 1, 1, 1 }
-    };
-    double correct_sse = 4*0.25 + 2*0.5;
-    EXPECT_EQ(correct_sse, clustering_sse(points, clustering));
+    Clustering clustering { {0,1,2}, {3,4,5} };
+    double correct_sse = 2.0 / 3.0;
+    EXPECT_EQ(correct_sse, clustering_sse(6, 2, points, clustering));
 }
 
 TEST_F(KmeansTest, vector_range) {
@@ -76,42 +73,26 @@ TEST_F(KmeansTest, uniform_random_vector) {
             EXPECT_TRUE(range[i].first <= p[i] && p[i] <= range[i].second);
 }
 
-// Testing kmeans is a bit tricky -- because the algorithm relies on randomly
-// initialized values, there's no guarantee it'll find the same result every
-// time. This test only checks that the result is a valid clustering, not that
-// it's a good one.
-TEST_F(KmeansTest, kmeans) {
-    Clustering clustering = kmeans(points, 2, 0.01);
-
-    // check that 'clustering' is actually a clustering of the input
-    EXPECT_EQ(2, clustering.centroids.size());
-    for (auto p : clustering.centroids)
-        EXPECT_EQ(2, p.size());
-    EXPECT_EQ(6, clustering.cluster.size());
-    for (auto i : clustering.cluster)
-        EXPECT_TRUE(0 <= i && i < 2);
-
-    // check that each centroid is the mean of its cluster
-    for (unsigned int j = 0; j < 2; ++j) {
-        Point correct_centroid {0.0, 0.0};
-        int n = 0;
-        for (unsigned int i = 0; i < 6; ++i)
-            if (clustering.cluster[i] == j) {
-                ++n;
-                correct_centroid = add(correct_centroid, points[i]);
-            }
-        divide(correct_centroid, (double)n);
-        EXPECT_EQ(correct_centroid, clustering.centroids[j]);
-    }
+TEST_F(KmeansTest, compute_centroids) {
+    Clustering clustering { {0,1,2}, {3,4,5} };
+    vector<Point> correct_centroids {
+        { 2.0/3.0, 7.0/3.0 },
+        { 7.0/3.0, 2.0/3.0 }
+    };
+    // XXX this compares double values with ==
+    EXPECT_EQ(correct_centroids, compute_centroids(points, clustering));
 }
 
-// Run kmeans 10 times in a row. For this very simple clustering problem, it
-// seems virtually certain that one of 10 runs will produce the ideal result.
-TEST_F(KmeansTest, kmeans_repeat) {
-    Clustering clustering = kmeans_repeat(10, points, 2, 0.01);
-    std::set<vector<unsigned int>> ideal {
-        { 0, 0, 0, 1, 1, 1 },
-        { 1, 1, 1, 0, 0, 0 }
+TEST_F(KmeansTest, clustering_for_centroids) {
+    Clustering correct_clustering { {0,1,2}, {3,4,5} };
+    vector<Point> centroids {
+        { 2.0/3.0, 7.0/3.0 },
+        { 7.0/3.0, 2.0/3.0 }
     };
-    EXPECT_TRUE(ideal.count(clustering.cluster));
+    EXPECT_EQ(correct_clustering,
+              clustering_for_centroids(6, 2, points, centroids));
+}
+
+TEST_F(KmeansTest, kmeans) {
+    EXPECT_TRUE(valid_clustering(kmeans(points, 2, 0.01), 6, 2));
 }
