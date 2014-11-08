@@ -10,11 +10,13 @@
 using std::pair;
 using std::vector;
 
+// TODO we should be using distance_squared instead of distance in some places
+
 double clustering_sse(const vector<Point>& points,
                       const Clustering& clustering) {
     double sse = 0.0;
-    unsigned int n = points.size();
-    for (unsigned int i = 0; i < n; ++i)
+    unsigned n = points.size();
+    for (unsigned i = 0; i < n; ++i)
         sse += distance(points[i],
                         clustering.centroids[clustering.cluster[i]]);
     return sse;
@@ -23,12 +25,12 @@ double clustering_sse(const vector<Point>& points,
 vector<pair<double,double>>
 vector_range(const vector<Point>& points) {
     assert( ! points.empty());
-    unsigned int n = points[0].size();
+    unsigned n = points[0].size();
     pair<double,double> x(std::numeric_limits<double>::max(),
                           std::numeric_limits<double>::lowest());
     vector<pair<double,double>> result(n, x);
     for (const Point& p : points)
-        for (unsigned int i = 0; i < n; ++i) {
+        for (unsigned i = 0; i < n; ++i) {
             double v = p[i];
             pair<double,double>& r = result[i];
             r.first = std::min(r.first, v);
@@ -52,27 +54,27 @@ Point uniform_random_vector(const vector<pair<double,double>>& r) {
 }
 
 Clustering kmeans(const vector<Point>& points,
-                  unsigned int k,
+                  unsigned k,
                   double epsilon,
-                  unsigned int max_iterations) {
-    unsigned int n = points.size();
-    unsigned int m = points[0].size();
+                  unsigned max_iterations) {
+    unsigned n = points.size();
+    unsigned m = points[0].size();
     vector<Point> centroids(k);
     vector<Point> previous_centroids;
-    vector<unsigned int> cluster(n);
+    vector<unsigned> cluster(n);
 
     // initialize centroids
     vector<pair<double,double>> r = vector_range(points);
     for (Point& c : centroids)
         c = uniform_random_vector(r);
 
-    for (unsigned int t = 0; t < max_iterations; ++t) {
+    for (unsigned t = 0; t < max_iterations; ++t) {
         // cluster assignment
-        for (unsigned int i = 0; i < n; ++i) {
+        for (unsigned i = 0; i < n; ++i) {
             const Point& p = points[i];
-            unsigned int min_j = 0;
+            unsigned min_j = 0;
             double min_distance = std::numeric_limits<double>::max();
-            for (unsigned int j = 0; j < k; ++j) {
+            for (unsigned j = 0; j < k; ++j) {
                 double d = distance(centroids[j], p);
                 if (d < min_distance) {
                     min_j = j;
@@ -85,10 +87,10 @@ Clustering kmeans(const vector<Point>& points,
         // centroid update
         previous_centroids = std::move(centroids);
         centroids = vector<Point>(k);
-        for (unsigned int j = 0; j < k; ++j) {
-            unsigned int count = 0;
+        for (unsigned j = 0; j < k; ++j) {
+            unsigned count = 0;
             Point c(m);
-            for (unsigned int i = 0; i < n; ++i)
+            for (unsigned i = 0; i < n; ++i)
                 if (cluster[i] == j) {
                     ++count;
                     c = add(c, points[i]);
@@ -99,7 +101,7 @@ Clustering kmeans(const vector<Point>& points,
 
         // check stopping criterion
         double d = 0.0;
-        for (unsigned int j = 0; j < k; ++j)
+        for (unsigned j = 0; j < k; ++j)
             d += distance(previous_centroids[j], centroids[j]);
         if (d <= epsilon)
             break;
