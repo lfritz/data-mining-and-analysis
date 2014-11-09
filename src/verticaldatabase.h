@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-class TransactionDatabase;
+struct TransactionDatabase;
 
 // Binary database for a frequent itemset mining task. Each item is stored as
 // a bitset indicating which transactions it is included in.

@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-class TransactionDatabase;
+struct TransactionDatabase;
 
 class Node;
 
