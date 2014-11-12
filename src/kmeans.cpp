@@ -2,68 +2,63 @@
 
 #include <cassert>
 #include <limits>
-#include <random>
 
-#include "vectormath.h"
-
+using Eigen::VectorXd;
 using std::pair;
 using std::vector;
 
+double squared_distance(const VectorXd& a,
+                        const VectorXd& b) {
+    VectorXd d = a - b;
+    return d.dot(d);
+}
+
 double clustering_sse(unsigned n,
                       unsigned k,
-                      const vector<Point>& points,
+                      const vector<VectorXd>& points,
                       const Clustering& clustering) {
-    vector<Point> centroids = compute_centroids(points, clustering);
+    vector<VectorXd> centroids = compute_centroids(points, clustering);
     double sse = 0.0;
     for (unsigned j = 0; j < k; ++j) {
         const vector<unsigned>& cluster = clustering[j];
-        const Point& centroid = centroids[j];
+        const VectorXd& centroid = centroids[j];
         for (unsigned i : cluster)
-            sse += distance_squared(points[i], centroid);
+            sse += squared_distance(points[i], centroid);
     }
     return sse;
 }
 
-vector<pair<double,double>>
-vector_range(const vector<Point>& points) {
+void vector_range(const vector<VectorXd>& points,
+                  VectorXd& min,
+                  VectorXd& max) {
     assert( ! points.empty());
-    unsigned n = points[0].size();
-    pair<double,double> x(std::numeric_limits<double>::max(),
-                          std::numeric_limits<double>::lowest());
-    vector<pair<double,double>> result(n, x);
-    for (const Point& p : points)
-        for (unsigned i = 0; i < n; ++i) {
-            double v = p[i];
-            pair<double,double>& r = result[i];
-            r.first = std::min(r.first, v);
-            r.second = std::max(r.second, v);
-        }
-    return result;
+    min = points[0];
+    max = points[0];
+    for (unsigned i = 1; i < points.size(); ++i) {
+        const VectorXd& p = points[i];
+        min = min.cwiseMin(p);
+        max = max.cwiseMax(p);
+    }
 }
 
-double uniform_random_double(double min, double max) {
-    static std::random_device rd;
-    static std::default_random_engine re(rd());
-    static std::uniform_int_distribution<int> ud(0, 10000);
-    return min + ud(re) * ((max - min) / 10000.0);
+VectorXd uniform_random_vector(const VectorXd& min,
+                               const VectorXd& max) {
+    unsigned d = min.size();
+    // get random values in the range [0,1]
+    VectorXd v = (VectorXd::Random(d) + VectorXd::Constant(d,1)) / 2;
+    // scale random value
+    return v.cwiseProduct(max-min) + min;
 }
 
-Point uniform_random_vector(const vector<pair<double,double>>& r) {
-    Point p;
-    for (auto& pair : r)
-        p.push_back(uniform_random_double(pair.first, pair.second));
-    return p;
-}
-
-vector<Point> compute_centroids(const vector<Point>& points,
-                                const Clustering& clustering) {
-    unsigned m = points[0].size();
-    vector<Point> centroids;
+vector<VectorXd> compute_centroids(const vector<VectorXd>& points,
+                                   const Clustering& clustering) {
+    unsigned d = points[0].size();
+    vector<VectorXd> centroids;
     for (const vector<unsigned>& cluster : clustering) {
-        Point centroid(m);
+        VectorXd centroid = VectorXd::Zero(d);
         for (unsigned i : cluster)
-            centroid = add(centroid, points[i]);
-        divide(centroid, (double)cluster.size());
+            centroid += points[i];
+        centroid /= (double)cluster.size();
         centroids.push_back(centroid);
     }
     return centroids;
@@ -71,15 +66,15 @@ vector<Point> compute_centroids(const vector<Point>& points,
 
 Clustering clustering_for_centroids(unsigned n,
                                     unsigned k,
-                                    const vector<Point>& points,
-                                    const vector<Point>& centroids) {
+                                    const vector<VectorXd>& points,
+                                    const vector<VectorXd>& centroids) {
     Clustering clustering(k);
     for (unsigned i = 0; i < n; ++i) {
-        const Point& p = points[i];
+        const VectorXd& p = points[i];
         unsigned min_j = 0;
         double min_d = std::numeric_limits<double>::max();
         for (unsigned j = 0; j < k; ++j) {
-            double d = distance_squared(centroids[j], p);
+            double d = squared_distance(centroids[j], p);
             if (d < min_d) {
                 min_j = j;
                 min_d = d;
@@ -90,18 +85,20 @@ Clustering clustering_for_centroids(unsigned n,
     return clustering;
 }
 
-Clustering kmeans(const vector<Point>& points,
+Clustering kmeans(const vector<VectorXd>& points,
                   unsigned k,
                   double epsilon,
                   unsigned max_iterations) {
     unsigned n = points.size();
-    vector<Point> centroids(k);
-    vector<Point> previous_centroids;
+    vector<VectorXd> centroids(k);
+    vector<VectorXd> previous_centroids;
 
     // initialize centroids
-    vector<pair<double,double>> r = vector_range(points);
-    for (Point& c : centroids)
-        c = uniform_random_vector(r);
+    VectorXd min;
+    VectorXd max;
+    vector_range(points, min, max);
+    for (VectorXd& c : centroids)
+        c = uniform_random_vector(min, max);
 
     Clustering clustering;
     for (unsigned t = 0; t < max_iterations; ++t) {
@@ -115,7 +112,7 @@ Clustering kmeans(const vector<Point>& points,
         // check stopping criterion
         double d = 0.0;
         for (unsigned j = 0; j < k; ++j)
-            d += distance_squared(previous_centroids[j], centroids[j]);
+            d += squared_distance(previous_centroids[j], centroids[j]);
         if (d <= epsilon)
             break;
     }
@@ -124,7 +121,7 @@ Clustering kmeans(const vector<Point>& points,
 }
 
 Clustering kmeans_repeat(unsigned int repetitions,
-                         const vector<Point>& points,
+                         const vector<VectorXd>& points,
                          unsigned int k,
                          double epsilon,
                          unsigned int max_iterations) {

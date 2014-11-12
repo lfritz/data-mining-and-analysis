@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <random>
 
+using Eigen::MatrixXd;
 using std::vector;
 
 Clustering random_clustering(unsigned n, unsigned k) {
@@ -15,21 +16,22 @@ Clustering random_clustering(unsigned n, unsigned k) {
     return clusters;
 }
 
-double cluster_sqnorm(const Kernel& kernel, const vector<unsigned>& c) {
+double cluster_sqnorm(const MatrixXd& kernel,
+                      const vector<unsigned>& cluster) {
     double s = 0.0;
-    for (unsigned a : c)
-        for (unsigned b : c)
-            s += kernel[a][b];
-    double cluster_size = (double)c.size();
+    for (unsigned a : cluster)
+        for (unsigned b : cluster)
+            s += kernel(a, b);
+    double cluster_size = (double)cluster.size();
     return s / (cluster_size*cluster_size);
 }
 
-double avg_kernel_value(const Kernel& kernel,
+double avg_kernel_value(const MatrixXd& kernel,
                         unsigned j,
                         const vector<unsigned>& c) {
     double a = 0.0;
     for (unsigned i : c)
-        a += kernel[i][j];
+        a += kernel(i, j);
     double cluster_size = (double)c.size();
     return a / cluster_size;
 }
@@ -68,11 +70,11 @@ double clustering_change(unsigned n,
     return 1.0 - (1.0 / (double)n) * (double)sum_same;
 }
 
-Clustering kernel_kmeans(const Kernel& kernel,
+Clustering kernel_kmeans(const MatrixXd& kernel,
                          unsigned k,
                          double epsilon,
                          unsigned max_iterations) {
-    unsigned n = kernel.size();
+    unsigned n = kernel.rows();
     Clustering clusters = random_clustering(n, k);
 
     for (unsigned t = 0; t < max_iterations; ++t) {
@@ -104,25 +106,25 @@ Clustering kernel_kmeans(const Kernel& kernel,
     return clusters;
 }
 
-double clustering_kernel_sse(const Kernel& kernel,
+double clustering_kernel_sse(const MatrixXd& kernel,
                              const Clustering& clustering) {
-    unsigned n = kernel.size();
+    unsigned n = kernel.rows();
     double sse = 0.0;
     for (unsigned j = 0; j < n; ++j)
-        sse += kernel[j][j];
+        sse += kernel(j, j);
     for (const vector<unsigned>& c : clustering) {
         double cluster_size = (double)c.size();
         double sum = 0.0;
         for (unsigned a : c)
             for (unsigned b : c)
-                sum += kernel[a][b];
+                sum += kernel(a, b);
         sse -= sum / cluster_size;
     }
     return sse;
 }
 
 Clustering kernel_kmeans_repeat(unsigned repetitions,
-                                const Kernel& kernel,
+                                const MatrixXd& kernel,
                                 unsigned k,
                                 double epsilon,
                                 unsigned max_iterations) {

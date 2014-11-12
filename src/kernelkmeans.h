@@ -4,20 +4,20 @@
 // and Analysis: Fundamental Concepts and Algorithms by Mohammed J. Zaki and
 // Wagner Meira Jr.
 
+#include <Eigen/Core>
 #include <vector>
 
 #include "clustering.h"
-
-typedef std::vector<std::vector<double>> Kernel;
 
 // Randomly partition n points into k clusters.
 Clustering random_clustering(unsigned n, unsigned k);
 
 // Compute the squared norm of the cluster mean in feature space.
-double cluster_sqnorm(const Kernel& kernel, const std::vector<unsigned>& c);
+double cluster_sqnorm(const Eigen::MatrixXd& kernel,
+                      const std::vector<unsigned>& cluster);
 
 // Compute the average kernel value for point j and cluster c.
-double avg_kernel_value(const Kernel& kernel,
+double avg_kernel_value(const Eigen::MatrixXd& kernel,
                         unsigned j,
                         const std::vector<unsigned>& c);
 
@@ -31,7 +31,7 @@ unsigned find_closest_cluster(unsigned k,
 unsigned count_same(const std::vector<unsigned>& a,
                     const std::vector<unsigned>& b);
 
-// The change between two clusterings of a set of points, measure as the
+// The change between two clusterings of a set of points, measured as the
 // fraction of points reassigned to a different cluster.
 double clustering_change(unsigned n,
                          unsigned k,
@@ -42,20 +42,20 @@ double clustering_change(unsigned n,
 // into k clusters based on the values of a kernel function. The algorithm
 // proceeds iteratively for at most max_iterations or until the change between
 // successive iterations (as measured by clustering_change) is at most epsilon.
-Clustering kernel_kmeans(const Kernel& kernel,
+Clustering kernel_kmeans(const Eigen::MatrixXd& kernel,
                          unsigned k,
                          double epsilon=0.0,
                          unsigned max_iterations=1000);
 
 
 // Compute the sum of squared errors (SSE) of a clustering in feature space.
-double clustering_kernel_sse(const Kernel& kernel,
+double clustering_kernel_sse(const Eigen::MatrixXd& kernel,
                              const Clustering& clustering);
 
 // Run kmeans multiple times and take the result with the lowest SSE (sum of
 // squared errors).
 Clustering kernel_kmeans_repeat(unsigned repetitions,
-                                const Kernel& kernel,
+                                const Eigen::MatrixXd& kernel,
                                 unsigned k,
                                 double epsilon=0.0,
                                 unsigned max_iterations=1000);

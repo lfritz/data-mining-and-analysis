@@ -1,10 +1,3 @@
-# find boost::regex library
-find_package(Boost 1.54.0 REQUIRED regex)
-if (Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIR})
-    add_definitions("-DHAS_BOOST")
-endif()
-
 # static library used for unit tests
 set(LIBRARYFILES apriori.cpp associationrules.cpp bruteforce.cpp clustering.cpp declat.cpp eclat.cpp itemsets.cpp kernelkmeans.cpp kmeans.cpp main.cpp msweb.cpp prefixtree.cpp transactiondatabase.cpp verticaldatabase.cpp)
 add_library(itemsetmining ${LIBRARYFILES})

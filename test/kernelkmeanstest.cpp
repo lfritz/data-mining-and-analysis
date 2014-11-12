@@ -1,18 +1,17 @@
 #include "kernelkmeanstest.h"
 
+using Eigen::MatrixXd;
 using std::vector;
 
-KernelKmeansTest::KernelKmeansTest() {
+KernelKmeansTest::KernelKmeansTest() : kernel(4,4) {
     // Example data with n=4 points in a 2-dimensional feature space:
     // (1,1) and (1,3) make up cluster 0
     // (2,2) is cluster 1
     // (3,1) is not (yet) in a cluster
-    kernel = Kernel {
-        {  2,  4,  4,  4 },
-        {  4, 10,  8,  6 },
-        {  4,  8,  8,  8 },
-        {  4,  6,  8, 10 }
-    };
+    kernel << 2,  4,  4,  4,
+              4, 10,  8,  6,
+              4,  8,  8,  8,
+              4,  6,  8, 10;
     clusters = {
         { 0, 1 },
         { 2 }
