@@ -1,17 +1,13 @@
 #include "kmeanstest.h"
 
+#include "helper.h"
+
 #include <kmeans.h>
-#include <set>
 
 using Eigen::Vector2d;
 using Eigen::Vector3d;
 using Eigen::VectorXd;
 using std::vector;
-
-bool is_approx(const VectorXd& a,
-               const VectorXd& b) {
-    return a.isApprox(b);
-}
 
 KmeansTest::KmeansTest() {
     points = {
@@ -78,8 +74,8 @@ TEST_F(KmeansTest, compute_centroids) {
         Vector2d(7.0/3.0, 2.0/3.0)
     };
     vector<VectorXd> centroids = compute_centroids(points, clustering);
-    EXPECT_PRED2(is_approx, correct_centroids[0], centroids[0]);
-    EXPECT_PRED2(is_approx, correct_centroids[1], centroids[1]);
+    EXPECT_PRED2(is_approx_v, correct_centroids[0], centroids[0]);
+    EXPECT_PRED2(is_approx_v, correct_centroids[1], centroids[1]);
 }
 
 TEST_F(KmeansTest, clustering_for_centroids) {
