@@ -44,7 +44,7 @@ public:
     std::vector<int> children() const;
 
     // Add a child (with support 0).
-    Node * addChild(int item_id);
+    void addChild(int item_id);
 
     // Remove a child.
     void removeChild(int item_id);

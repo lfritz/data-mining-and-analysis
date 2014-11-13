@@ -46,10 +46,8 @@ vector<int> Node::children() const {
     return result;
 }
 
-Node * Node::addChild(int item_id) {
-    Node * new_node = new Node();
-    c[item_id] = std::unique_ptr<Node>(new_node);
-    return new_node;
+void Node::addChild(int item_id) {
+    c[item_id] = std::make_unique<Node>();
 }
 
 void Node::removeChild(int item_id) {

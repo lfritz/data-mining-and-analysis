@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(DATAMINING)
 
-add_definitions(-std=c++11 -Wall)
+add_definitions(-std=c++14 -Wall)
 
 find_package(Boost 1.54.0 REQUIRED regex)
 if (Boost_FOUND)

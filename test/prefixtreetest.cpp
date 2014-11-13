@@ -6,9 +6,12 @@ using std::pair;
 using std::vector;
 
 NodeTest::NodeTest() : root() {
-    node2 = root.addChild(2);
-    node4 = root.addChild(4);
-    node21 = node2->addChild(1);
+    root.addChild(2);
+    node2 = root.getChild(2);
+    root.addChild(4);
+    node4 = root.getChild(4);
+    node2->addChild(1);
+    node21 = node2->getChild(1);
 }
 
 // test 'isLeaf' member function
@@ -47,7 +50,8 @@ TEST_F(NodeTest, children) {
 
 // test 'addChild' member function
 TEST_F(NodeTest, addChild) {
-    Node * node43 = node4->addChild(3);
+    node4->addChild(3);
+    Node * node43 = node4->getChild(3);
     EXPECT_EQ(node43, node4->getChild(3));
 }
 

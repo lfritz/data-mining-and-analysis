@@ -1,7 +1,6 @@
 #include "frequentitemsettest.h"
 
 using std::string;
-using std::unique_ptr;
 using std::vector;
 
 FrequentItemsetTest::FrequentItemsetTest() : td() {
@@ -15,9 +14,8 @@ FrequentItemsetTest::FrequentItemsetTest() : td() {
         { 0, 1, 2, 3, 4 },
         {    1, 2, 3,   }
     };
-    td = unique_ptr<TransactionDatabase>(new TransactionDatabase(items,
-                                                                 transactions));
-    vd = unique_ptr<VerticalDatabase>(new VerticalDatabase(*td));
+    td = std::make_unique<TransactionDatabase>(items, transactions);
+    vd = std::make_unique<VerticalDatabase>(*td);
 
     // frequent itemsets (table 8.1 in the book)
     minsup = 3;

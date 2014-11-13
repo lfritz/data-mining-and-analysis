@@ -46,15 +46,23 @@ TEST_F(ItemsetsTest, each_k_subset) {
 // test immediate_subsets_in function
 TEST_F(ItemsetsTest, immediate_subsets_in) {
     Node root;
-    Node * node1 = root.addChild(1);
-    node1->addChild(2)->addChild(3);
-    node1->addChild(3)->addChild(5);
+    root.addChild(1);
+    Node * node1 = root.getChild(1);
+    node1->addChild(2);
+    Node * node1_2 = node1->getChild(2);
+    node1_2->addChild(3);
+    node1->addChild(3);
+    Node * node1_3 = node1->getChild(3);
+    node1_3->addChild(5);
     node1->addChild(5);
     root.addChild(2);
-    Node * node3 = root.addChild(3);
+    root.addChild(3);
+    Node * node3 = root.getChild(3);
     node3->addChild(5);
     node3->addChild(6);
-    root.addChild(5)->addChild(6);
+    root.addChild(5);
+    Node * node5 = root.getChild(5);
+    node5->addChild(6);
     root.addChild(6);
 
     vector<int> itemset1 = {1,3,5};
