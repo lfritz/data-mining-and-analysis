@@ -1,15 +1,16 @@
 #include "msweb.h"
 
-#include <boost/regex.hpp>
 #include <fstream>
+#include <iostream>
 #include <map>
+#include <regex>
 #include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
 
-using boost::regex;
-using boost::regex_match;
+using std::regex;
+using std::regex_match;
 using std::runtime_error;
 using std::string;
 using std::vector;
@@ -37,7 +38,7 @@ TransactionDatabase load_msweb_file(const string& filename) {
     vector<int> * current_transaction = nullptr;
 
     // go though file one line at a time
-    boost::smatch match;
+    std::smatch match;
     for (string line; std::getline(input, line); ) {
         if (line.size() == 0)
             continue; // skip empty line
