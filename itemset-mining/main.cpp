@@ -3,14 +3,15 @@
 #include <iostream>
 #include <memory>
 
-#include "apriori.h"
-#include "associationrules.h"
-#include "bruteforce.h"
-#include "declat.h"
-#include "eclat.h"
+#include <apriori.h>
+#include <associationrules.h>
+#include <bruteforce.h>
+#include <declat.h>
+#include <eclat.h>
+#include <transactiondatabase.h>
+#include <verticaldatabase.h>
+
 #include "msweb.h"
-#include "transactiondatabase.h"
-#include "verticaldatabase.h"
 
 using std::cout;
 using std::get;

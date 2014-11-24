@@ -10,6 +10,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(clustering-gui)
+add_subdirectory(itemset-mining)
 add_subdirectory(lib/gtest-1.7.0)
 
 enable_testing()
