@@ -2,6 +2,7 @@
 
 #include <QMouseEvent>
 #include <QPainter>
+#include <random>
 
 using Eigen::VectorXd;
 using std::vector;
@@ -57,11 +58,13 @@ void PointsArea::toggleMulti(bool on) {
 void PointsArea::mousePressEvent(QMouseEvent * event) {
     QPoint p = event->pos();
     if (multi) {
-        ps.push_back(p);
-        ps.push_back(QPoint(p.rx() + 5, p.ry() + 5));
-        ps.push_back(QPoint(p.rx() + 5, p.ry() - 5));
-        ps.push_back(QPoint(p.rx() - 5, p.ry() + 5));
-        ps.push_back(QPoint(p.rx() - 5, p.ry() - 5));
+        static const double stddev = 10.0;
+        static std::random_device random_device;
+        static std::default_random_engine random_engine(random_device());
+        static std::normal_distribution<double> normal_dist(0.0, stddev);
+        for (unsigned i = 0; i < 5; ++i)
+            ps.push_back(QPoint(p.rx() + normal_dist(random_engine),
+                                p.ry() + normal_dist(random_engine)));
     } else {
         ps.push_back(p);
     }
