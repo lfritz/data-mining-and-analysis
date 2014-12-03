@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <random>
 
+#include "algorithm.h"
+
 using Eigen::MatrixXd;
 using std::vector;
 
@@ -40,16 +42,9 @@ unsigned find_closest_cluster(unsigned k,
                               unsigned j,
                               const vector<double>& sqnorm,
                               const vector<vector<double>>& avg) {
-    unsigned best_cluster = 0;
-    double best_d = std::numeric_limits<double>::max();
-    for (unsigned i = 0; i < k; ++i) {
-        double d = sqnorm[i] - 2.0 * avg[j][i];
-        if (d < best_d) {
-            best_cluster = i;
-            best_d = d;
-        }
-    }
-    return best_cluster;
+    return arg_min((unsigned)0, k, [j,&sqnorm,&avg](unsigned i) {
+        return sqnorm[i] - 2.0 * avg[j][i];
+    });
 }
 
 unsigned count_same(const vector<unsigned>& a,

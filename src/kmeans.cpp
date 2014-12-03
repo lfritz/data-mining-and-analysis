@@ -3,6 +3,8 @@
 #include <cassert>
 #include <limits>
 
+#include "algorithm.h"
+
 using Eigen::VectorXd;
 using std::pair;
 using std::vector;
@@ -71,16 +73,10 @@ Clustering clustering_for_centroids(unsigned n,
     Clustering clustering(k);
     for (unsigned i = 0; i < n; ++i) {
         const VectorXd& p = points[i];
-        unsigned min_j = 0;
-        double min_d = std::numeric_limits<double>::max();
-        for (unsigned j = 0; j < k; ++j) {
-            double d = squared_distance(centroids[j], p);
-            if (d < min_d) {
-                min_j = j;
-                min_d = d;
-            }
-        }
-        clustering[min_j].push_back(i);
+        unsigned closest_cluster = arg_min((unsigned)0, k, [&](unsigned j) {
+            return squared_distance(centroids[j], p);
+        });
+        clustering[closest_cluster].push_back(i);
     }
     return clustering;
 }
