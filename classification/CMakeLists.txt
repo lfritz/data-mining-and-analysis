@@ -2,5 +2,7 @@
 # files
 include_directories(${DATAMINING_SOURCE_DIR}/src)
 
-add_executable(itemset-mining main.cpp msweb.cpp)
-target_link_libraries(itemset-mining datamining)
+find_package(Boost REQUIRED)
+
+add_executable(classification csv.cpp main.cpp)
+target_link_libraries(classification datamining)
