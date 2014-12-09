@@ -6,6 +6,8 @@
 #include <Eigen/Core>
 #include <vector>
 
+#include "classifier.h"
+
 // Evaluate the probability density function for the multivariate normal
 // distribution with mean mu and covariance matrix sigma at point x.
 double multivariate_normal_pd(const Eigen::VectorXd& x,
@@ -14,7 +16,7 @@ double multivariate_normal_pd(const Eigen::VectorXd& x,
 
 // Full Bayesian classifier: uses the Bayes theorem to predict the class for a
 // point as the one that maximizes the posterior probability.
-class BayesClassifier {
+class BayesClassifier : public Classifier {
     int k;
     std::vector<double> p;
     std::vector<Eigen::VectorXd> mu;
@@ -28,7 +30,7 @@ public:
                     const std::vector<int>& y);
 
     // Predict the class for point x.
-    int predict(const Eigen::VectorXd& x) const;
+    virtual int predict(const Eigen::VectorXd& x) const;
 
     // Number of classes.
     int nClasses() const;

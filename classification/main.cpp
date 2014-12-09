@@ -1,14 +1,18 @@
 #include <chrono>
 #include <functional>
 #include <iostream>
+#include <memory>
 
 #include <bayesclassifier.h>
+#include <naivebayesclassifier.h>
 
 #include "csv.h"
 
 using std::cout;
 using std::get;
+using std::make_unique;
 using std::string;
+using std::unique_ptr;
 using std::vector;
 
 void print(const Eigen::VectorXd& v) {
@@ -31,27 +35,36 @@ void time(const string& name, std::function<void()> f) {
 
 int main(int argc, char * argv[]) {
     // parse arguments
-    if (argc != 3) {
-        cout << "Usage: " << argv[0] << " training-data test-data\n";
+    if (argc != 4) {
+        cout << "Usage: " << argv[0] << " algorithm training-data test-data\n"
+             << "Algorithm can be bayes or naive-bayes.\n";
         return 1;
     }
-    string training_filename = argv[1];
-    string test_filename = argv[2];
+    char algorithm = argv[1][0];
+    string training_filename = argv[2];
+    string test_filename = argv[3];
 
+    // load input data
     vector<string> labels;
     ClassificationDataset training = load_csv(training_filename, labels);
     ClassificationDataset test = load_csv(test_filename, labels);
-
     cout << "Loaded " << training.x.size() << " training datasets.\n";
     cout << "Loaded " << test.x.size() << " test datasets.\n";
-    cout << "Training classifier...\n";
-    BayesClassifier classifier(training.x, training.y);
 
+    // train classifier
+    cout << "Training classifier...\n";
+    unique_ptr<Classifier> classifier;
+    if (algorithm == 'b')
+        classifier = make_unique<BayesClassifier>(training.x, training.y);
+    else
+        classifier = make_unique<NaiveBayesClassifier>(training.x, training.y);
+
+    // use classifier
     cout << "Prediting class labels...\n";
     unsigned n_test = test.x.size();
     for (unsigned i = 0; i < n_test; ++i) {
         auto x = test.x[i];
-        int predicted = classifier.predict(x);
+        int predicted = classifier->predict(x);
         print(x);
         cout << ": " << labels[predicted] << " (actual: " << labels[test.y[i]]
              << ")\n";

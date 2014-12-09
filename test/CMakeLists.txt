@@ -5,7 +5,7 @@ include_directories(
     ${DATAMINING_SOURCE_DIR}/src
 )
 
-set(SOURCEFILES main.cpp algorithmtest.cpp associationrulestest.cpp bayesclassifiertest.cpp clusteringtest.cpp frequentitemsettest.cpp itemsetstest.cpp kernelfunctiontest.cpp kernelkmeanstest.cpp kmeanstest.cpp prefixtreetest.cpp verticaldatabasetest.cpp)
+set(SOURCEFILES main.cpp algorithmtest.cpp associationrulestest.cpp bayesclassifiertest.cpp clusteringtest.cpp frequentitemsettest.cpp itemsetstest.cpp kernelfunctiontest.cpp kernelkmeanstest.cpp kmeanstest.cpp naivebayesclassifiertest.cpp prefixtreetest.cpp verticaldatabasetest.cpp)
 
 add_executable(unittest ${SOURCEFILES})
 target_link_libraries(unittest datamining gtest_main)
