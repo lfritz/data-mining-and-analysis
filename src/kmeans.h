@@ -8,10 +8,7 @@
 #include <vector>
 
 #include "clustering.h"
-
-// Compute the squared distance between the vectors.
-double squared_distance(const Eigen::VectorXd& a,
-                        const Eigen::VectorXd& b);
+#include "vectors.h"
 
 // Compute the sum of squared errors (SSE) for a clustering.
 double clustering_sse(unsigned n,

@@ -3,7 +3,6 @@
 // Full Bayes classifier, from chapter 18.1 of Data Mining and Analysis:
 // Fundamental Concepts and Algorithms by Mohammed J. Zaki and Wagner Meira Jr.
 
-#include <Eigen/Core>
 #include <vector>
 
 #include "classifier.h"

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include <bayesclassifier.h>
+#include <knnclassifier.h>
 #include <naivebayesclassifier.h>
 
 #include "csv.h"
@@ -37,7 +38,10 @@ int main(int argc, char * argv[]) {
     // parse arguments
     if (argc != 4) {
         cout << "Usage: " << argv[0] << " algorithm training-data test-data\n"
-             << "Algorithm can be bayes or naive-bayes.\n";
+             << "Algorithm can be bayes, knn or naive-bayes.\n"
+             << "    bayes is a Full Bayes classifier\n"
+             << "    naive-bayes is a Naive Bayes classifier\n"
+             << "    knn is a K Nearest Neighbors classifier with k=5\n";
         return 1;
     }
     char algorithm = argv[1][0];
@@ -56,6 +60,10 @@ int main(int argc, char * argv[]) {
     unique_ptr<Classifier> classifier;
     if (algorithm == 'b')
         classifier = make_unique<BayesClassifier>(training.x, training.y);
+    else if (algorithm == 'k')
+        classifier = make_unique<KnnClassifier>(std::move(training.x),
+                                                std::move(training.y),
+                                                5);
     else
         classifier = make_unique<NaiveBayesClassifier>(training.x, training.y);
 

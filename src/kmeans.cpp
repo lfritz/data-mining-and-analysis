@@ -9,12 +9,6 @@ using Eigen::VectorXd;
 using std::pair;
 using std::vector;
 
-double squared_distance(const VectorXd& a,
-                        const VectorXd& b) {
-    VectorXd d = a - b;
-    return d.dot(d);
-}
-
 double clustering_sse(unsigned n,
                       unsigned k,
                       const vector<VectorXd>& points,

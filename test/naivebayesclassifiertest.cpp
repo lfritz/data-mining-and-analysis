@@ -4,10 +4,7 @@
 
 #include <naivebayesclassifier.h>
 
-using Eigen::MatrixXd;
 using Eigen::Vector2d;
-using Eigen::VectorXd;
-using std::vector;
 
 NaiveBayesClassifierTest::NaiveBayesClassifierTest() {
     x = {
