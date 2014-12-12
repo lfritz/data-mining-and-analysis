@@ -12,7 +12,6 @@ add_subdirectory(test)
 add_subdirectory(classification)
 add_subdirectory(clustering-gui)
 add_subdirectory(itemset-mining)
-add_subdirectory(lib/gtest-1.7.0)
 
 enable_testing()
 add_test(UnitTest COMMAND unittest)

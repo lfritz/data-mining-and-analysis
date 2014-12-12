@@ -1,11 +1,11 @@
 # we need to set 'src' as include directory so the compiler can find the header
 # files
 include_directories(
-    ${DATAMINING_SOURCE_DIR}/lib/gtest-1.7.0/include
+    ${DATAMINING_SOURCE_DIR}/lib
     ${DATAMINING_SOURCE_DIR}/src
 )
 
-set(SOURCEFILES main.cpp algorithmtest.cpp associationrulestest.cpp bayesclassifiertest.cpp clusteringtest.cpp frequentitemsettest.cpp itemsetstest.cpp kernelfunctiontest.cpp kernelkmeanstest.cpp kmeanstest.cpp knnclassifiertest.cpp naivebayesclassifiertest.cpp prefixtreetest.cpp verticaldatabasetest.cpp)
+set(SOURCEFILES algorithm.cpp associationrule.cpp bayesclassifier.cpp clustering.cpp frequentitemsets.cpp itemsets.cpp kernelfunction.cpp kernelkmeans.cpp kmeans.cpp knnclassifier.cpp main.cpp naivebayesclassifier.cpp prefixtree.cpp verticaldatabase.cpp)
 
 add_executable(unittest ${SOURCEFILES})
-target_link_libraries(unittest datamining gtest_main)
+target_link_libraries(unittest datamining)
