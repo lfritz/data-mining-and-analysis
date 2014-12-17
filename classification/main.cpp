@@ -1,4 +1,5 @@
 #include <chrono>
+#include <Eigen/Core>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -7,13 +8,12 @@
 #include <knnclassifier.h>
 #include <naivebayesclassifier.h>
 
-#include "csv.h"
+#include "tsv.h"
 
+using Eigen::MatrixXd;
 using std::cout;
-using std::get;
 using std::make_unique;
 using std::string;
-using std::unique_ptr;
 using std::vector;
 
 void print(const Eigen::VectorXd& v) {
@@ -24,8 +24,8 @@ void print(const Eigen::VectorXd& v) {
     }
 }
 
-void time(const string& name, std::function<void()> f) {
-    cout << "Running " << name << "...\n";
+void time(const string& description, std::function<void()> f) {
+    cout << description << "...\n";
     std::chrono::time_point<std::chrono::system_clock> start, end;
     start = std::chrono::system_clock::now();
     f();
@@ -36,47 +36,72 @@ void time(const string& name, std::function<void()> f) {
 
 int main(int argc, char * argv[]) {
     // parse arguments
-    if (argc != 4) {
-        cout << "Usage: " << argv[0] << " algorithm training-data test-data\n"
-             << "Algorithm can be bayes, knn or naive-bayes.\n"
-             << "    bayes is a Full Bayes classifier\n"
-             << "    naive-bayes is a Naive Bayes classifier\n"
-             << "    knn is a K Nearest Neighbors classifier with k=5\n";
+    if (argc != 3) {
+        cout << "Usage: " << argv[0] << " file algorithm\n"
+             << "Algorithm can be b, k or n:\n"
+             << "    b -- Full Bayes classifier\n"
+             << "    n -- Naive Bayes classifier\n"
+             << "    k -- K Nearest Neighbors classifier with k=5\n";
         return 1;
     }
-    char algorithm = argv[1][0];
-    string training_filename = argv[2];
-    string test_filename = argv[3];
+    string filename = argv[1];
+    char algorithm = argv[2][0];
 
     // load input data
-    vector<string> labels;
-    ClassificationDataset training = load_csv(training_filename, labels);
-    ClassificationDataset test = load_csv(test_filename, labels);
-    cout << "Loaded " << training.x.size() << " training datasets.\n";
-    cout << "Loaded " << test.x.size() << " test datasets.\n";
+    ClassificationDataset tr = load_tsv(filename);
+    ClassificationDataset te;
+    unsigned n = tr.x.size();
+
+    // split into training and test data
+    unsigned n_tr = (unsigned)std::round(0.7 * (double)n);
+    unsigned n_te = n - n_tr;
+    te.x.insert(te.x.begin(), tr.x.begin() + n_tr, tr.x.end());
+    te.y.insert(te.y.begin(), tr.y.begin() + n_tr, tr.y.end());
+    tr.x.erase(tr.x.begin() + n_tr, tr.x.end());
+    tr.y.erase(tr.y.begin() + n_tr, tr.y.end());
+    cout << n << " instances (" << n_tr << " training, " << n_te << " test)\n";
 
     // train classifier
-    cout << "Training classifier...\n";
-    unique_ptr<Classifier> classifier;
-    if (algorithm == 'b')
-        classifier = make_unique<BayesClassifier>(training.x, training.y);
-    else if (algorithm == 'k')
-        classifier = make_unique<KnnClassifier>(std::move(training.x),
-                                                std::move(training.y),
-                                                5);
-    else
-        classifier = make_unique<NaiveBayesClassifier>(training.x, training.y);
-
-    // use classifier
-    cout << "Prediting class labels...\n";
-    unsigned n_test = test.x.size();
-    for (unsigned i = 0; i < n_test; ++i) {
-        auto x = test.x[i];
-        int predicted = classifier->predict(x);
-        print(x);
-        cout << ": " << labels[predicted] << " (actual: " << labels[test.y[i]]
-             << ")\n";
+    std::unique_ptr<Classifier> c;
+    if (algorithm == 'b') {
+        time("Training Bayes classifier", [&]() {
+            c = make_unique<BayesClassifier>(tr.x, tr.y);
+        });
+    } else if (algorithm == 'k') {
+        cout << "Training K Nearest Neighbors classifier...\n";
+        c = make_unique<KnnClassifier>(std::move(tr.x), std::move(tr.y), 5);
+    } else {
+        time("Training Naive Bayes classifier", [&]() {
+            c = make_unique<NaiveBayesClassifier>(tr.x, tr.y);
+        });
     }
+
+    // apply classifier to test data
+    Eigen::MatrixXd m = Eigen::MatrixXd::Zero(2,2);
+    time("Predicting class labels", [&]() {
+        auto xi = te.x.cbegin();
+        auto yi = te.y.cbegin();
+        for (; xi != te.x.end(); ++xi, ++yi)
+            ++m(c->predict(*xi), *yi);
+    });
+
+    double true_positive  = m(1,1);
+    double false_positive = m(1,0);
+    double true_negative  = m(0,0);
+    double false_negative = m(0,1);
+
+    double accuracy  = (true_positive + true_negative) /  (double)n_te;
+    double precision = true_positive / (true_positive + false_positive);
+    double recall    = true_positive / (true_positive + false_negative);
+
+    cout << "Results:\n"
+         << "    True positives:  " << true_positive << "\n"
+         << "    False positives: " << false_positive << "\n"
+         << "    True negatives:  " << true_negative << "\n"
+         << "    False negatives: " << false_negative << "\n"
+         << "    Accuracy:        " << accuracy << "\n"
+         << "    Precision:       " << precision << "\n"
+         << "    Recall:          " << recall << "\n";
 
     return 0;
 }

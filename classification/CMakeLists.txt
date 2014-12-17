@@ -4,5 +4,5 @@ include_directories(${DATAMINING_SOURCE_DIR}/src)
 
 find_package(Boost REQUIRED)
 
-add_executable(classification csv.cpp main.cpp)
+add_executable(classification main.cpp tsv.cpp)
 target_link_libraries(classification datamining)
