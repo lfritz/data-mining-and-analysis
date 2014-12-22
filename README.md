@@ -41,6 +41,12 @@ make
 ./test/unittest
 ```
 
+If you're building with Clang, you can enable the [http://clang.llvm.org/docs/AddressSanitizer.html](AddressSanitizer) memory error detector by setting the variable `USE_SANITIZER` to `Address`. On the command line, that would look something like this:
+
+```
+clang -DCMAKE_CXX_COMPILER=clang++ -DUSE_SANITIZER=Address ..
+```
+
 
 ## src
 
