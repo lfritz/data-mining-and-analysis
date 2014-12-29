@@ -8,7 +8,7 @@
 // Example:
 // arg_max(-5, 5, [](double x) { return -x*x; });
 // returns 0
-template <class I, class UnaryFunction>
+template <typename I, typename UnaryFunction>
 I arg_max(I first, I last, UnaryFunction f) {
     I best = first;
     I i = first;
@@ -29,7 +29,7 @@ I arg_max(I first, I last, UnaryFunction f) {
 // Example:
 // arg_min(-5, 5, [](double x) { return x*x; });
 // returns 0
-template <class I, class UnaryFunction>
+template <typename I, typename UnaryFunction>
 I arg_min(I first, I last, UnaryFunction f) {
     I best = first;
     I i = first;

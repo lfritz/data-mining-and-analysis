@@ -26,7 +26,7 @@ class KernelKmeansDialog : public QDialog {
     QDoubleSpinBox * sigmaSpinBox;
 
 public:
-    KernelKmeansDialog(QWidget * parent = 0);
+    KernelKmeansDialog(QWidget * parent = nullptr);
 
     int clusters() const;
     int repetitions() const;

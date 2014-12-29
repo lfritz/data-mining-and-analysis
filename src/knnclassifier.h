@@ -25,6 +25,6 @@ public:
     KnnClassifier(std::vector<Eigen::VectorXd> x,
                   std::vector<int> y,
                   int k);
-    virtual int predict(const Eigen::VectorXd& p) const;
+    virtual int predict(const Eigen::VectorXd& p) const override;
     std::vector<int> find_k_nearest(const Eigen::VectorXd& p) const;
 };

@@ -9,8 +9,8 @@ using std::vector;
 // Initialize database using a list of item ids for each transaction.
 TransactionDatabase::TransactionDatabase(vector<string> items,
                                          vector<vector<int>> transactions) :
-    ts(transactions),
-    is(items) {
+    ts(std::move(transactions)),
+    is(std::move(items)) {
     int nItems = is.size();
     for (vector<int>& t : ts) {
         std::sort(t.begin(), t.end());

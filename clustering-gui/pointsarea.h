@@ -21,7 +21,7 @@ class PointsArea : public QWidget {
 
 public:
     // Create a PointsArea, initially with no points.
-    PointsArea(QWidget * parent = 0);
+    PointsArea(QWidget * parent = nullptr);
 
     // Get the current set of points.
     std::vector<Eigen::VectorXd> points() const;
@@ -43,6 +43,6 @@ public slots:
     void toggleMulti(bool on);
 
 protected:
-    void mousePressEvent(QMouseEvent * event);
-    void paintEvent(QPaintEvent * event);
+    void mousePressEvent(QMouseEvent * event) override;
+    void paintEvent(QPaintEvent * event) override;
 };

@@ -12,7 +12,7 @@ class KmeansDialog : public QDialog {
     QSpinBox * repetitionsSpinBox;
 
 public:
-    KmeansDialog(QWidget * parent = 0);
+    KmeansDialog(QWidget * parent = nullptr);
     int clusters() const;
     int repetitions() const;
 };

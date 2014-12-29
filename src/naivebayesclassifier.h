@@ -29,7 +29,7 @@ public:
                          const std::vector<int>& y);
 
     // Predict the class for point x.
-    virtual int predict(const Eigen::VectorXd& x) const;
+    virtual int predict(const Eigen::VectorXd& x) const override;
 
     // Number of classes.
     int nClasses() const;

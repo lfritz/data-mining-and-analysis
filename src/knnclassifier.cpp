@@ -16,8 +16,8 @@ using std::vector;
 KnnClassifier::KnnClassifier(vector<VectorXd> xx,
                              vector<int> yy,
                              int kk) :
-x(std::forward<vector<VectorXd>>(xx)),
-y(std::forward<vector<int>>(yy)),
+x(std::move(xx)),
+y(std::move(yy)),
 n(x.size()),
 k(kk) {
     assert(x.size() == y.size());
