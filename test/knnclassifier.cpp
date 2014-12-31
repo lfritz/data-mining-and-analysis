@@ -60,7 +60,7 @@ TEST_CASE("K Nearest Neighbors classifier") {
         };
         for (int i = 0; i < 3; ++i) {
             auto v = c.find_k_nearest(test_x[i]);
-            CHECK(set<int>(v.begin(), v.end()) == nearest[i]);
+            CHECK(set<int>(v.cbegin(), v.cend()) == nearest[i]);
         }
     }
 

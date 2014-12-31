@@ -29,7 +29,7 @@ k(0), d(0), p(), mu(), var() {
         assert(v.size() == d);
 
     // number of classes
-    k = *(std::max_element(y.begin(), y.end())) + 1;
+    k = *(std::max_element(y.cbegin(), y.cend())) + 1;
 
     for (int i = 0; i < k; ++i) {
         // find all points in class i

@@ -37,8 +37,8 @@ int KnnClassifier::predict(const VectorXd& p) const {
             ++ki[c];
     }
 
-    auto best = arg_max(ki.begin(),
-                        ki.end(),
+    auto best = arg_max(ki.cbegin(),
+                        ki.cend(),
                         [](auto it) { return it->second; });
     return best->first;
 }
@@ -51,8 +51,8 @@ vector<int> KnnClassifier::find_k_nearest(const VectorXd& p) const {
     // go through training points and look for nearer ones
     for (int i = 0; i < n; ++i) {
         double d = squared_distance(p, x[i]);
-        for (auto it = nearest.begin();
-             it != nearest.end();
+        for (auto it = nearest.cbegin();
+             it != nearest.cend();
              ++it)
             if (it->second > d) {
                 nearest.pop_back();

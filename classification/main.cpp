@@ -55,10 +55,10 @@ int main(int argc, char * argv[]) {
     // split into training and test data
     unsigned n_tr = (unsigned)std::round(0.7 * (double)n);
     unsigned n_te = n - n_tr;
-    te.x.insert(te.x.begin(), tr.x.begin() + n_tr, tr.x.end());
-    te.y.insert(te.y.begin(), tr.y.begin() + n_tr, tr.y.end());
-    tr.x.erase(tr.x.begin() + n_tr, tr.x.end());
-    tr.y.erase(tr.y.begin() + n_tr, tr.y.end());
+    te.x.insert(te.x.cbegin(), tr.x.cbegin() + n_tr, tr.x.cend());
+    te.y.insert(te.y.cbegin(), tr.y.cbegin() + n_tr, tr.y.cend());
+    tr.x.erase(tr.x.cbegin() + n_tr, tr.x.cend());
+    tr.y.erase(tr.y.cbegin() + n_tr, tr.y.cend());
     cout << n << " instances (" << n_tr << " training, " << n_te << " test)\n";
 
     // train classifier
@@ -81,7 +81,7 @@ int main(int argc, char * argv[]) {
     time("Predicting class labels", [&]() {
         auto xi = te.x.cbegin();
         auto yi = te.y.cbegin();
-        for (; xi != te.x.end(); ++xi, ++yi)
+        for (; xi != te.x.cend(); ++xi, ++yi)
             ++m(c->predict(*xi), *yi);
     });
 
