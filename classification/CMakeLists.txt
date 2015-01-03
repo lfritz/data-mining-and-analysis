@@ -2,7 +2,8 @@
 # files
 include_directories(${DATAMINING_SOURCE_DIR}/src)
 
-find_package(Boost REQUIRED)
+find_package(Boost COMPONENTS system timer REQUIRED)
 
 add_executable(classification main.cpp tsv.cpp)
 target_link_libraries(classification datamining)
+target_link_libraries(classification ${Boost_LIBRARIES})

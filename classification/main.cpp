@@ -1,3 +1,4 @@
+#include <boost/timer/timer.hpp>
 #include <chrono>
 #include <Eigen/Core>
 #include <functional>
@@ -22,16 +23,6 @@ void print(const Eigen::VectorXd& v) {
             cout << ", ";
         cout << v(i);
     }
-}
-
-void time(const string& description, std::function<void()> f) {
-    cout << description << "...\n";
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
-    f();
-    end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    cout << "Done (" << elapsed_seconds.count() << " s).\n";
 }
 
 int main(int argc, char * argv[]) {
@@ -64,26 +55,29 @@ int main(int argc, char * argv[]) {
     // train classifier
     std::unique_ptr<Classifier> c;
     if (algorithm == 'b') {
-        time("Training Bayes classifier", [&]() {
-            c = make_unique<BayesClassifier>(tr.x, tr.y);
-        });
+        cout << "Training Bayes classifier...\n";
+        boost::timer::auto_cpu_timer t;
+        c = make_unique<BayesClassifier>(tr.x, tr.y);
     } else if (algorithm == 'k') {
         cout << "Training K Nearest Neighbors classifier...\n";
+        boost::timer::auto_cpu_timer t;
         c = make_unique<KnnClassifier>(std::move(tr.x), std::move(tr.y), 5);
     } else {
-        time("Training Naive Bayes classifier", [&]() {
-            c = make_unique<NaiveBayesClassifier>(tr.x, tr.y);
-        });
+        cout << "Training Naive Bayes classifier...\n";
+        boost::timer::auto_cpu_timer t;
+        c = make_unique<NaiveBayesClassifier>(tr.x, tr.y);
     }
 
     // apply classifier to test data
     Eigen::MatrixXd m = Eigen::MatrixXd::Zero(2,2);
-    time("Predicting class labels", [&]() {
+    {
+        cout << "Predicting class labels...\n";
+        boost::timer::auto_cpu_timer t;
         auto xi = te.x.cbegin();
         auto yi = te.y.cbegin();
         for (; xi != te.x.cend(); ++xi, ++yi)
             ++m(c->predict(*xi), *yi);
-    });
+    }
 
     double true_positive  = m(1,1);
     double false_positive = m(1,0);

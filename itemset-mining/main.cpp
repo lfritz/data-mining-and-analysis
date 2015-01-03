@@ -1,3 +1,4 @@
+#include <boost/timer/timer.hpp>
 #include <chrono>
 #include <functional>
 #include <iostream>
@@ -16,16 +17,6 @@
 using std::cout;
 using std::get;
 using std::string;
-
-void time(const string& name, std::function<void()> f) {
-    cout << "Running " << name << "...\n";
-    std::chrono::time_point<std::chrono::system_clock> start, end;
-    start = std::chrono::system_clock::now();
-    f();
-    end = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end - start;
-    cout << "Done (" << elapsed_seconds.count() << " s).\n";
-}
 
 int main(int argc, char * argv[]) {
     // parse arguments
@@ -49,31 +40,33 @@ int main(int argc, char * argv[]) {
     // find frequent items
     FrequentItemsets fi;
     if (algorithm == 'a') {
-        time("apriori algorithm", [&fi,&td,minsup]() {
-            fi = apriori(td, minsup);
-        });
+        cout << "Runnint apriori algorithm...\n";
+        boost::timer::auto_cpu_timer t;
+        fi = apriori(td, minsup);
     } else if (algorithm == 'b') {
-        time("brute-force algorithm", [&fi,&td,minsup]() {
-            fi = brute_force(td, minsup);
-        });
+        cout << "Running brute-force algorithm...\n";
+        boost::timer::auto_cpu_timer t;
+        fi = brute_force(td, minsup);
     } else {
         VerticalDatabase vd(td);
         if (algorithm == 'd') {
-            time("declat algorithm", [&fi,&vd,minsup]() {
-                fi = declat(vd, minsup);
-            });
+            cout << "Running declat algorithm...\n";
+            boost::timer::auto_cpu_timer t;
+            fi = declat(vd, minsup);
         } else {
-            time("eclat algorithm", [&fi,&vd,minsup]() {
-                fi = eclat(vd, minsup);
-            });
+            boost::timer::auto_cpu_timer t;
+            cout << "Running eclat algorithm...\n";
+            fi = eclat(vd, minsup);
         }
     }
 
     // find association rules
     std::vector<AssociationRule> rules;
-    time("finding association rules", [&rules,&fi,&minconf]() {
+    {
+        cout << "Finding association rules...\n";
+        boost::timer::auto_cpu_timer t;
         rules = association_rules(fi, minconf);
-    });
+    }
 
     // print results
     cout << "Found " << rules.size() << " association rules:\n";
