@@ -92,5 +92,5 @@ TransactionDatabase load_msweb_file(const string& filename) {
         }
     }
 
-    return TransactionDatabase(is, ts);
+    return TransactionDatabase(std::move(is), std::move(ts));
 }
