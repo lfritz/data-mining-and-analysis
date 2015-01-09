@@ -41,10 +41,16 @@ make
 ./test/unittest
 ```
 
-If you're building with Clang, you can enable the [AddressSanitizer](http://clang.llvm.org/docs/AddressSanitizer.html) memory error detector by setting the variable `USE_SANITIZER` to `Address`. On the command line, that would look something like this:
+If you're building with Clang or GCC, you can enable the [AddressSanitizer](http://clang.llvm.org/docs/AddressSanitizer.html) memory error detector by setting the variable `USE_SANITIZER` to `address`. On the command line, that would look something like this:
 
 ```
-clang -DCMAKE_CXX_COMPILER=clang++ -DUSE_SANITIZER=Address ..
+clang -DUSE_SANITIZER=address ..
+```
+
+You can enable the [undefined behavior sanitizer](http://developerblog.redhat.com/2014/10/16/gcc-undefined-behavior-sanitizer-ubsan/) by setting `USE_SANITIZER` to `undefined`:
+
+```
+clang -DUSE_SANITIZER=undefined ..
 ```
 
 

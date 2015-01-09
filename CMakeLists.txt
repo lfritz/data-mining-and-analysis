@@ -4,9 +4,14 @@ project(DATAMINING)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Wall")
 
-if(USE_SANITIZER STREQUAL "Address")
+if(USE_SANITIZER STREQUAL "address")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -g -fsanitize=address -fno-omit-frame-pointer")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=address")
+elseif(USE_SANITIZER STREQUAL "undefined")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O1 -g -fsanitize=undefined -fno-omit-frame-pointer")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -g -fsanitize=undefined")
+elseif(USE_SANITIZER)
+    message("Unknown value for USE_SANITIZER!")
 endif()
 
 find_package(Eigen3 REQUIRED)
