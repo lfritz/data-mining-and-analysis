@@ -44,7 +44,8 @@ int KnnClassifier::predict(const VectorXd& p) const {
 }
 
 vector<int> KnnClassifier::find_k_nearest(const VectorXd& p) const {
-    // initialize vector of k nearest neighbors
+    // 'nearest' is a vector of the k nearest neighbors encountered so far,
+    // sorted from nearest to farthest
     auto initial_value = make_pair(-1, std::numeric_limits<double>::max());
     vector<pair<int,double>> nearest(k, initial_value);
 

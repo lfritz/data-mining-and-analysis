@@ -70,7 +70,7 @@ Clustering clustering_for_centroids(unsigned n,
         auto sq_distance_from_p = [&centroids,&p](unsigned j) {
             return squared_distance(centroids[j], p);
         };
-        unsigned closest_cluster = arg_min((unsigned)0, k, sq_distance_from_p);
+        unsigned closest_cluster = arg_min(0u, k, sq_distance_from_p);
         clustering[closest_cluster].push_back(i);
     }
     return clustering;

@@ -1,7 +1,5 @@
 #include <boost/timer/timer.hpp>
-#include <chrono>
 #include <Eigen/Core>
-#include <functional>
 #include <iostream>
 #include <memory>
 

@@ -1,8 +1,5 @@
 #include <boost/timer/timer.hpp>
-#include <chrono>
-#include <functional>
 #include <iostream>
-#include <memory>
 
 #include <apriori.h>
 #include <associationrules.h>

@@ -19,7 +19,7 @@ NaiveBayesClassifier::NaiveBayesClassifier(const vector<VectorXd>& x,
                                            const vector<int>& y) :
 k(0), d(0), p(), mu(), var() {
     // n is the number of points
-    int n = x.size();
+    unsigned n = x.size();
     assert(n > 0);
     assert(y.size() == n);
 
@@ -34,7 +34,7 @@ k(0), d(0), p(), mu(), var() {
     for (int i = 0; i < k; ++i) {
         // find all points in class i
         vector<VectorXd> xi;
-        for (int j = 0; j < n; ++j)
+        for (unsigned j = 0; j < n; ++j)
             if (y[j] == i)
                 xi.push_back(x[j]);
 

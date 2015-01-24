@@ -14,7 +14,7 @@ bool is_subset(const std::vector<int>& a, const std::vector<int>& b);
 
 // Call 'f' with each subset of 'itemset' of size 'k'.
 void each_k_subset(unsigned int k,
-                   std::vector<int> itemset,
+                   const std::vector<int>& itemset,
                    std::function<void(const std::vector<int>&)> f);
 
 // Given an itemset of size k, check if all subsets of size k-1 are in the

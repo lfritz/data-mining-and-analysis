@@ -12,6 +12,8 @@ struct TransactionDatabase;
 
 class Node;
 
+// Function to be called by Node::eachNode with the prefix for the node and the
+// node itself. If it returns false, the node will be deleted.
 typedef std::function<bool(std::vector<int> prefix, Node& node)>
         NodeCallback;
 

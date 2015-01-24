@@ -5,7 +5,7 @@
 using std::vector;
 
 TEST_CASE("arg_max and arg_min work for a polynomial") {
-    std::function<double(double)> f = [](double x) {
+    auto f = [](double x) {
         return (x+4)*(x+1)*(x-2);
     };
 

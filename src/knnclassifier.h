@@ -19,12 +19,12 @@ class KnnClassifier : public Classifier {
     int k;
 
 public:
-    // Create Naive Bayesian classifier using a set of training points x and
-    // corresponding class labels y. Pass x and y with std::move if you want to
-    // avoid duplicating the data.
+    // Create K nearest neighbors classifier using a set of training points x
+    // and corresponding class labels y. Pass x and y with std::move if you
+    // want to avoid duplicating the data.
     KnnClassifier(std::vector<Eigen::VectorXd> x,
                   std::vector<int> y,
                   int k);
-    virtual int predict(const Eigen::VectorXd& p) const override;
+    int predict(const Eigen::VectorXd& p) const override;
     std::vector<int> find_k_nearest(const Eigen::VectorXd& p) const;
 };

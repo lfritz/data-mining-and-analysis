@@ -9,16 +9,16 @@
 
 // Homogeneous polynomial kernel.
 Eigen::MatrixXd
-homogeneous_polynomial_kernel(std::vector<Eigen::VectorXd> points,
+homogeneous_polynomial_kernel(const std::vector<Eigen::VectorXd>& points,
                               double q);
 
 // Inhomogeneous polynomial kernel.
 Eigen::MatrixXd
-inhomogeneous_polynomial_kernel(std::vector<Eigen::VectorXd> points,
+inhomogeneous_polynomial_kernel(const std::vector<Eigen::VectorXd>& points,
                                 double q,
                                 double c);
 
 // Gaussian kernel, aka Gaussian radial basis function kernel.
 Eigen::MatrixXd
-gaussian_kernel(std::vector<Eigen::VectorXd> points,
+gaussian_kernel(const std::vector<Eigen::VectorXd>& points,
                 double var);

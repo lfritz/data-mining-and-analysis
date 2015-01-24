@@ -28,7 +28,7 @@ bool is_subset(const vector<int>& a, const vector<int>& b) {
 }
 
 void each_k_subset(unsigned int k,
-                   vector<int> itemset,
+                   const vector<int>& itemset,
                    std::function<void(const vector<int>&)> f) {
     unsigned int s = itemset.size();
 
